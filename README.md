@@ -111,6 +111,6 @@ Before you begin, ensure you have the following installed:
 
 ## 📮 Contact
 + Instagram - [@itsAimad](https://instagram/heyitsAimad)
-+ Linkedin - [@Aimad Bouya](https://www.linkedin.com/in aimad-bouya-958724302/)
++ Linkedin - [@Aimad Bouya](https://www.linkedin.com/in/aimad-bouya-958724302/)
 + Github - [@itsAimad](https://github.com/itsAimad)
 
