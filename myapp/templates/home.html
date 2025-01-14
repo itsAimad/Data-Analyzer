@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analyzer</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/login_img.png' %}">
+</head>
+<body class="light-mode">
+    <!-- Stars and Meteors Background -->
+    <div id="starry-background"></div>
+
+    <!-- Greeting Section -->
+    <section id="greeting-section">
+        <div id="greeting">
+            <h1>Welcome to Data Analyzer!</h1>
+        </div>
+    </section>
+
+    <!-- Navbar -->
+    <nav class="hidden">
+        <div class="nav-container">
+            <img src="{% static 'images/login_img.png'%}" alt="Login">
+            <h1>Data Analyzer</h1>
+            <div class="nav-right">
+                <button id="theme-toggle">🌙 Dark Mode</button>
+                <button id="logout-button" onclick="window.location.href='{% url 'index' %}'">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="hidden">
+        <!-- File Upload Section -->
+        <section id="upload-section" class="animated-content">
+            <h2>Upload Your CSV File</h2>
+            <div id="drop-zone">
+                <img src="{% static 'images/file-upload-icon.png' %}" alt="Upload Icon" id="upload-icon" />
+                <p>Drag and drop your file here or click to upload</p>
+                <input type="file" name="file" id="file-input" accept=".csv" />
+                <span id="file-name"></span>
+            </div>
+            <p id="file-message"></p>
+        </section>
+
+        <!-- File Statistics Section -->
+        <section id="stats-section" class="animated-content">
+            <h2>File Statistics</h2>
+            <div id="stats-container"></div>
+        </section>
+
+        <!-- Column Selection and Statistics Section -->
+        <section id="stats-selection-section" class="animated-content">
+            <h2>Select a Column for Statistics</h2>
+            <select name="column" id="column-select">
+                <option value="" disabled selected>Select a column</option>
+                <!-- Options will be populated dynamically using JavaScript -->
+            </select>
+            <p id="column-message" class="message-hidden">Please select a numerical column.</p>
+            <div id="stats-grid">
+                <!-- Statistics will be displayed here as a grid -->
+                <div class="stat-card" id="mean-card">
+                    <h3>Mean</h3>
+                    <p class="stat-value">-</p>
+                </div>
+                <div class="stat-card" id="median-card">
+                    <h3>Median</h3>
+                    <p class="stat-value">-</p>
+                </div>
+                <div class="stat-card" id="std-card">
+                    <h3>Standard Deviation</h3>
+                    <p class="stat-value">-</p>
+                </div>
+                <div class="stat-card" id="min-card">
+                    <h3>Minimum</h3>
+                    <p class="stat-value">-</p>
+                </div>
+                <div class="stat-card" id="max-card">
+                    <h3>Maximum</h3>
+                    <p class="stat-value">-</p>
+                </div>
+                <div class="stat-card" id="var-card">
+                    <h3>Variance</h3>
+                    <p class="stat-value">-</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Graph Selection and Input Section -->
+        <section id="graph-section" class="animated-content">
+            <h2>Choose a Graph</h2>
+            <form method="POST" id="graph-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" id="hidden-file-input" name="file" style="display: none;"> <!-- Hidden file input -->
+                <select name='graphs' id="graph-type">
+                    <option value="" disabled selected>Select a graph</option>
+                    {% for option in plotly_options %}
+                        <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+                <div id="graph-inputs"></div>
+                <button type="submit" id="generate-graph-button" name="submit">Generate Graph</button>
+            </form>
+        </section>
+
+        <!-- Graph Display Section -->
+        <section id="DrawGraph" class="animated-content">
+            <h2>Visualization</h2>
+            <div id="graph-container" style="width: 100%;height: 500px;"></div> <!-- Ensure this has a unique ID -->
+        </section>
+
+    </main>
+
+    <script>
+        const statsData = '{{ stats|safe }}';
+    </script>
+    <script src="{% static 'JS/home.js' %}"></script>
+    
+    
+</body>
+</html>

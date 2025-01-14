@@ -1,0 +1,208 @@
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    color: white;
+    border-radius: 5px;
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.success-notification {
+    background-color: #4CAF50; /* Green background for success */
+}
+
+.error-notification {
+    background-color: #f44336; /* Red background for error */
+}
+
+
+/* Container */
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+/* Sign Up Section */
+.signup-section {
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle, #000000, #1a1a1a); /* Darker space gradient */
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Full viewport height */
+}
+
+/* Star Background */
+.star-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: moveStar linear infinite;
+}
+
+.meteor {
+    position: absolute;
+    width: 2px;
+    height: 70px;
+    background: linear-gradient(to bottom, transparent, white);
+    animation: moveMeteor linear infinite;
+}
+
+/* Animations */
+@keyframes moveStar {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(100vh);
+    }
+}
+
+@keyframes moveMeteor {
+    from {
+        transform: translateY(-100%) rotate(45deg);
+    }
+    to {
+        transform: translateY(100vh) rotate(45deg);
+    }
+}
+
+/* Sign Up Form */
+.signup-form {
+    padding: 40px;
+    border-radius: 10px;
+    backdrop-filter: blur(2px); /* Slight blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    background-color: transparent;
+    z-index: 1;
+    position: relative;
+}
+
+.signup-form h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* Default Input Styles */
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Default border */
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1); /* Transparent background */
+    color: #ffffff;
+    outline: none;
+    font-size: 1rem;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+}
+
+/* Focus Styles for All Inputs Except Confirm Password */
+.form-group input:focus {
+    box-shadow: 0px 0px 12px rgba(0, 123, 255, 0.8); /* Blue glow on focus */
+    border-color: #007BFF; /* Highlight border on focus */
+}
+
+/* Confirm Password Input */
+#confirm-password {
+    width: 100%;
+    padding: 10px;
+    border: none; /* Remove the border */
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1); /* Transparent background */
+    color: #ffffff;
+    outline: none;
+    font-size: 1rem;
+    box-shadow: none; /* Remove default box-shadow */
+    transition: box-shadow 0.3s ease, border 0.3s ease; /* Synchronized transitions */
+}
+
+/* Box-Shadow and Border for Password Match Check */
+#confirm-password.match {
+    box-shadow: 0px 0px 12px rgba(0, 255, 0, 0.8); /* Green glow for match */
+    border: 1px solid rgba(0, 255, 0, 0.8); /* Green border for match */
+}
+
+#confirm-password.no-match {
+    box-shadow: 0px 0px 12px rgba(255, 0, 0, 0.8); /* Red glow for no match */
+    border: 1px solid rgba(255, 0, 0, 0.8); /* Red border for no match */
+}
+
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-signup {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Vibrant gradient */
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-signup:hover {
+    background: linear-gradient(135deg, #2575fc, #6a11cb); /* Reverse gradient on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+    box-shadow: 0px 4px 15px rgba(37, 117, 252, 0.6), /* Blue glow */
+                0px 6px 20px rgba(106, 17, 203, 0.6); /* Purple glow */
+}
+
+.login-link {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #ffffff;
+}
+
+.login-link a {
+    color: #00BFFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Message for Password Match */
+.message {
+    font-size: 0.9rem;
+    margin-top: 5px;
+}

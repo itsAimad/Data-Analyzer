@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analyzer</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <script src="{% static 'JS/scriptIndex.js'%}" defer></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand logo" href="{% url 'index' %}">Data Analyzer</a>
+            <img src="{% static 'images/login_img.png'%}" alt="Login">
+            <div class="d-flex align-items-center">
+                <a href="{% url 'signin' %}" class="btn btn-outline-primary me-2" id="btn1">Sign In</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary me-2" id="btn2">Sign Up</a>
+                <!-- Dark/Light Mode Toggle Button -->
+                <button class="mode"></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="animated-background"></div> <!-- Background animation container -->
+        <div class="container">
+            <h1>Welcome to Data Analyzer</h1>
+            <p>
+                Unlock the power of your data with our advanced analysis tools. Whether you're a beginner or an expert,
+                our platform provides everything you need to visualize, analyze, and make data-driven decisions.
+            </p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2>Key Features</h2>
+        <div class="row">
+            <!-- Feature 1 -->
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-upload"></i> <!-- Font Awesome icon for upload -->
+                    </div>
+                    <h3>Upload CSV Files</h3>
+                    <p>Easily upload your CSV files and let our platform handle the rest. We support large datasets and provide real-time processing.</p>
+                </div>
+            </div>
+            <!-- Feature 2 -->
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i> <!-- Font Awesome icon for charts -->
+                    </div>
+                    <h3>Interactive Charts</h3>
+                    <p>Visualize your data with interactive charts and graphs. Choose from bar charts, line graphs, pie charts, and more.</p>
+                </div>
+            </div>
+            <!-- Feature 3 -->
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i> <!-- Font Awesome icon for tools -->
+                    </div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Perform advanced data analysis, including statistical summaries, trend analysis, and predictive modeling.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="show-project">
+    <div class="container">
+        <h2>Showcase Project</h2>
+        <div class="project-grid">
+            <!-- Project 1 -->
+            <div class="project-card">
+                <img src="{% static 'images/project1.png' %}" alt="Project 1" class="project-image">
+                <div class="project-overlay">
+                    <h3>Project </h3>
+                    <p>Description of Project. This project demonstrates file statistics after uploading your file.</p>
+                    <a href="{% url 'signin' %}" class="project-link">Try It</a>
+                </div>
+            </div>
+            <!-- Project 2 -->
+            <div class="project-card">
+                <img src="{% static 'images/project2.png' %}" alt="Project 2" class="project-image">
+                <div class="project-overlay">
+                    <h3>Project </h3>
+                    <p>Description of Project. This project focuses on showing stats of a selected column.</p>
+                    <a href="{% url 'signin' %}" class="project-link">Try It</a>
+                </div>
+            </div>
+            <!-- Project 3 -->
+            <div class="project-card">
+                <img src="{% static 'images/project3.png' %}" alt="Project 3" class="project-image">
+                <div class="project-overlay">
+                    <h3>Project </h3>
+                    <p>Description of Project. This project showcases advanced and interactive graphs to simplify the Visualization.</p>
+                    <a href="#" class="project-link">Try It</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Us Section -->
+<section class="cards-section">
+    <div class="container">
+        <h2>Contact Us</h2>
+        <p class="cards-description">
+            Reach out to us through any of the following platforms. We're here to help!
+        </p>
+        <div class="cards">
+            <!-- Card 1: LinkedIn -->
+            <a href="https://www.linkedin.com/in/aimad-bouya-958724302/" target="_blank" class="card card-one" aria-label="Connect with us on LinkedIn">
+                <div class="icon">
+                   <img src="https://www.vectorlogo.zone/logos/linkedin/linkedin-icon.svg" alt="Linkedin"> <!-- LinkedIn Icon -->
+                </div>
+                <h2 class="card-title">LinkedIn</h2>
+                <p class="date">Connect with us</p>
+                <p class="description">Follow us on LinkedIn for updates and professional networking.</p>
+            </a>
+            <!-- Card 2: GitHub -->
+            <a href="https://github.com/itsAimad" target="_blank" class="card card-two" aria-label="Explore our code on GitHub">
+                <div class="icon">
+                   <img src="https://www.vectorlogo.zone/logos/github/github-tile.svg" alt="Github"> <!-- GitHub Icon -->
+                </div>
+                <h2 class="card-title">GitHub</h2>
+                <p class="date">Explore our code</p>
+                <p class="description">Check out our open-source projects and contribute on GitHub.</p>
+            </a>
+            <!-- Card 3: Instagram -->
+            <a href="https://www.instagram.com/heyitsaimad" target="_blank" class="card card-three" aria-label="Follow us on Instagram">
+                <div class="icon">
+                   <img src="https://www.vectorlogo.zone/logos/instagram/instagram-icon.svg" alt="Instagram"> <!-- Instagram Icon -->
+                </div>
+                <h2 class="card-title">Instagram</h2>
+                <p class="date">Follow us</p>
+                <p class="description">Stay updated with our latest news and behind-the-scenes content.</p>
+            </a>
+            <!-- Card 4: Email -->
+            <a href="mailto:bouyaimad11@gmail.com" class="card card-four" aria-label="Email us at support@dataanalyzer.com">
+                <div class="icon">
+                    <img src="https://www.vectorlogo.zone/logos/gmail/gmail-icon.svg" alt="Gmail"> <!-- Email Icon -->
+                </div>
+                <h2 class="card-title">Email</h2>
+                <p class="date">bouyaimad11@gmail.com</p>
+                <p class="description">Reach out to us via email for any inquiries or support.</p>
+            </a>
+        </div>
+    </div>
+</section>

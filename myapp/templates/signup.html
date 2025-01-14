@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Data Analyzer</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/login_img.png' %}">
+</head>
+<body>
+    <!-- Sign Up Section -->
+    <section class="signup-section">
+        <div class="star-background"></div> <!-- Star background container -->
+        <div class="container">
+            <div class="signup-form">
+                <h2>Sign Up</h2>
+                <hr style="width: 320px;position: relative;left: 2px;">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required onkeyup="checkPasswordMatch()">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required onkeyup="checkPasswordMatch()">
+                        <p id="password-match-message" class="message"></p>
+                    </div>
+                    <button type="submit" class="btn-signup" disabled>Sign Up</button>
+                </form>
+                <p class="login-link">Already have an account? <a href="{% url 'signin' %}">Sign In</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notifications -->
+<div id="success-notification" class="notification success-notification"></div>
+<div id="error-notification" class="notification error-notification"></div>
+    
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript for Star Background Animation -->
+    <script>
+       const starBackground = document.querySelector('.star-background');
+
+// Create stars
+function createStar() {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    star.style.left = `${Math.random() * 100}%`;
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.animationDuration = `${Math.random() * 3 + 2}s`; // Slower speed
+    star.style.opacity = Math.random(); // Random opacity for depth
+    starBackground.appendChild(star);
+
+    // Remove stars after they move out of view
+    star.addEventListener('animationend', () => {
+        star.remove();
+    });
+}
+
+// Create meteors
+function createMeteor() {
+    const meteor = document.createElement('div');
+    meteor.classList.add('meteor');
+    meteor.style.left = `${Math.random() * 100}%`;
+    meteor.style.top = `${Math.random() * 100}%`;
+    meteor.style.animationDuration = `${Math.random() * 3 + 2}s`; // Slower speed
+    meteor.style.opacity = Math.random(); // Random opacity
+    starBackground.appendChild(meteor);
+
+    // Remove meteors after they move out of view
+    meteor.addEventListener('animationend', () => {
+        meteor.remove();
+    });
+}
+
+// Generate stars and meteors continuously
+setInterval(createStar, 100); // Adjust the interval for more/less stars
+setInterval(createMeteor, 5000); // Adjust the interval for more/less meteors
+
+        // Function to check if passwords match
+        function checkPasswordMatch() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirm-password');
+            const message = document.getElementById('password-match-message');
+            const submitButton = document.querySelector('.btn-signup');
+
+            if (password.value && confirmPassword.value) {
+                if (password.value === confirmPassword.value) {
+                    confirmPassword.classList.remove('no-match'); // Remove red glow class
+                    confirmPassword.classList.add('match'); // Add green glow class
+                    message.textContent = 'Passwords match!';
+                    message.style.color = '#00ff00';
+                    submitButton.disabled = false; // Enable submit button
+                } else {
+                    confirmPassword.classList.remove('match'); // Remove green glow class
+                    confirmPassword.classList.add('no-match'); // Add red glow class
+                    message.textContent = 'Passwords do not match!';
+                    message.style.color = '#ff0000';
+                    submitButton.disabled = true; // Disable submit button
+                }
+            } else {
+                confirmPassword.classList.remove('match', 'no-match'); // Remove both classes if empty
+                message.textContent = '';
+                submitButton.disabled = true; // Disable submit button if fields are empty
+            }
+        }
+    </script>
+
+<script>
+    // Check if there's a success or error message from Django
+    const successMessage = "{{ success_message }}";
+    const errorMessage = "{{ error_message }}";
+
+    if (successMessage) {
+        const successNotification = document.getElementById('success-notification');
+        successNotification.textContent = successMessage;  // Set the notification text
+        successNotification.style.display = 'block';  // Show the notification
+
+        // Hide the notification after 1.2 seconds and redirect to home
+        setTimeout(() => {
+            successNotification.style.display = 'none';
+            window.location.href = "{% url 'signin' %}";  // Redirect to signin page
+        }, 1200);
+    }
+
+    if (errorMessage) {
+        const errorNotification = document.getElementById('error-notification');
+        errorNotification.textContent = errorMessage;  // Set the notification text
+        errorNotification.style.display = 'block';  // Show the notification
+
+        // Hide the notification after 1.5 seconds
+        setTimeout(() => {
+            errorNotification.style.display = 'none';
+        }, 2500);
+    }
+</script>
+</body>
+</html>

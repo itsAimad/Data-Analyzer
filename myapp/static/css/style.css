@@ -1,0 +1,680 @@
+/* Light Mode (Default) */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    transition: background-color 0.3s;
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007BFF;
+}
+
+.navbar .btn {
+    padding: 8px 20px;
+    border-radius: 14px;
+    font-weight: bold;
+    transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+.navbar .btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Specific styles for #btn1 (Sign In) */
+.navbar #btn1 {
+    background-color: #fff; /* Default background color */
+    color: #007BFF; /* Default text color */
+}
+
+.navbar #btn1:hover {
+    background-color: #007BFF;; /* Slightly darker on hover */
+    color: #fff;
+}
+
+/* Specific styles for #btn2 (Sign Up) */
+.navbar #btn2 {
+    background-color: #007BFF; /* Default background color */
+    color: #ffffff; /* Default text color */
+}
+
+.navbar #btn2:hover {
+    background-color: #0056b3; /* Slightly darker on hover */
+}
+
+.navbar .container-fluid img{
+    width:26px;
+    position:absolute;
+    margin-left:10.5rem;
+    margin-bottom:3px;
+}
+/* Section- Hero */
+/* Hero Section */
+.hero-section {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #007BFF, #00BFFF);
+    color: #ffffff;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 500px; /* Set your desired height here */
+}
+
+/* Animated Background */
+.animated-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 10s infinite ease-in-out;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) translateX(0);
+    }
+    25% {
+        transform: translateY(-20px) translateX(20px);
+    }
+    50% {
+        transform: translateY(20px) translateX(-20px);
+    }
+    75% {
+        transform: translateY(-20px) translateX(-20px);
+    }
+    100% {
+        transform: translateY(0) translateX(0);
+    }
+}
+
+/* Heading (h1) Animation */
+.hero-section h1 {
+    font-size: 3rem; /* Adjust font size as needed */
+    font-weight: bold;
+    margin-bottom: 20px;
+    position: relative;
+    animation: fadeInDown 1.5s ease-out, floatText 3s ease-in-out infinite;
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floatText {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Paragraph (p) Animation */
+.hero-section p {
+    font-size: 1.25rem; /* Adjust font size as needed */
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeInUp 1.5s ease-out 0.5s forwards,floatTextp 3s ease-in-out infinite;
+}
+@keyframes floatTextp {
+    0%, 100%{
+        transform: translateY(0);
+    }50%{
+        transform:translateY(-10px);
+    }
+}
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@media (max-width: 768px) {
+    .hero-section {
+        height: 400px; /* Smaller height for mobile devices */
+    }
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .navbar {
+    background-color: #1f1f1f;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .navbar .logo {
+    color: #5ebad8;
+}
+
+body.dark-mode .navbar .btn {
+    background-color: #333;
+    color: #ffffff;
+    border-color: #444;
+}
+
+/* Specific dark mode styles for #btn1 (Sign In) */
+body.dark-mode .navbar #btn1 {
+    background-color: #5ac0d2; /* Dark mode background color */
+    color:#fff;
+}
+
+body.dark-mode .navbar #btn1:hover {
+    background-color: #4a9aa8; /* Slightly darker on hover */
+}
+
+/* Specific dark mode styles for #btn2 (Sign Up) */
+body.dark-mode .navbar #btn2 {
+    background-color: #333d5f; /* Dark mode background color */
+}
+
+body.dark-mode .navbar #btn2:hover {
+    background-color: #2a324d; /* Slightly darker on hover */
+}
+
+body.dark-mode .hero-section {
+    background: linear-gradient(135deg, #1f1f1f, #333);
+}
+
+/* Dark/Light Mode Toggle Button */
+.mode {
+    background-color: #007BFF;
+    border: none;
+    border-radius: 15px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    transition: background-color 0.3s, transform 0.3s ease; /* Smooth transition */
+}
+
+.mode:hover {
+    transform: translateY(-2px);
+    background-color: #0056b3; /* Slightly darker on hover */
+}
+
+.mode::before {
+    content: "🌞"; /* Sun icon for light mode */
+    font-size: 20px;
+}
+
+body.dark-mode .mode::before {
+    content: "🌙"; /* Moon icon for dark mode */
+}
+
+body.dark-mode .mode {
+    background-color: #000000;
+}
+
+body.dark-mode .mode:hover {
+    background-color: #333; /* Slightly darker on hover */
+}
+
+/* Features Section */
+.features-section {
+    padding: 80px 0;
+    background-color: #f8f9fa; /* Light background */
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.features-section h2 {
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.feature-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s, color 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px #0056b3;
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: #007bff; /* Blue color for icons */
+    margin-bottom: 20px;
+    transition: color 0.3s;
+}
+
+.feature-card h3 {
+    font-size: 1.75rem;
+    margin-bottom: 15px;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.feature-card p {
+    font-size: 1.1rem;
+    color: #666;
+    transition: color 0.3s;
+}
+
+/* Dark Mode Styles for Features Section */
+body.dark-mode .features-section {
+    background-color: #1f1f1f; /* Dark background */
+}
+
+body.dark-mode .features-section h2 {
+    color: #ffffff; /* White text in dark mode */
+}
+
+body.dark-mode .feature-card {
+    background-color: #2d2d2d; /* Dark card background */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .feature-card:hover {
+    box-shadow: 0 8px 16px rgba(74, 63, 64, 0.93);
+}
+
+body.dark-mode .feature-card h3 {
+    color: #ffffff; /* White text in dark mode */
+}
+
+body.dark-mode .feature-card p {
+    color: #b0b0b0; /* Light gray text in dark mode */
+}
+
+body.dark-mode .feature-icon {
+    color: #5ebad8; /* Light blue for icons in dark mode */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .features-section h2 {
+        font-size: 2rem; /* Smaller heading for mobile */
+    }
+
+    .feature-card {
+        padding: 20px; /* Reduce padding for smaller screens */
+        margin-bottom: 20px;
+    }
+
+    .feature-icon {
+        font-size: 2.5rem; /* Smaller icons for mobile */
+    }
+
+    .feature-card h3 {
+        font-size: 1.5rem; /* Smaller title for mobile */
+    }
+
+    .feature-card p {
+        font-size: 1rem; /* Smaller description for mobile */
+    }
+}
+
+@media (max-width: 576px) {
+    .features-section h2 {
+        font-size: 1.75rem; /* Smaller heading for very small screens */
+    }
+
+    .feature-card {
+        padding: 15px; /* Further reduce padding for very small screens */
+    }
+
+    .feature-icon {
+        font-size: 2rem; /* Smaller icons for very small screens */
+    }
+
+    .feature-card h3 {
+        font-size: 1.25rem; /* Smaller title for very small screens */
+    }
+
+    .feature-card p {
+        font-size: 0.9rem; /* Smaller description for very small screens */
+    }
+}
+
+
+/* Show Project Section */
+.show-project {
+    padding: 80px 0;
+    background-color: #f8f9fa; /* Light background */
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.show-project h2 {
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 0 20px;
+}
+
+.project-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.project-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.project-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-card:hover .project-overlay {
+    opacity: 1;
+}
+
+.project-overlay h3 {
+    font-size: 1.75rem;
+    margin-bottom: 10px;
+}
+
+.project-overlay p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.project-link {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.project-link:hover {
+    background-color: #0056b3;
+}
+
+/* Dark Mode Styles for Show Project Section */
+body.dark-mode .show-project {
+    background-color: #1f1f1f; /* Dark background */
+}
+
+body.dark-mode .show-project h2 {
+    color: #ffffff; /* White text in dark mode */
+}
+
+body.dark-mode .project-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .project-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .project-overlay {
+    background: rgba(0, 0, 0, 0.8); /* Slightly darker overlay in dark mode */
+}
+
+body.dark-mode .project-link {
+    background-color: #5ebad8; /* Light blue for links in dark mode */
+}
+
+body.dark-mode .project-link:hover {
+    background-color: #4a9aa8; /* Slightly darker on hover */
+}
+
+
+/* ################## */
+/* Contact Us Section */
+.cards-section {
+    padding: 80px 0;
+    background-color: #f8f9fa; /* Light background */
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.cards-section h2 {
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.cards-description {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 40px;
+    transition: color 0.3s;
+}
+
+/* Cards Container */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 0 20px;
+    
+}
+
+/* Card Styles */
+.card {
+    max-width: 100%;
+    color: #fff;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: scale(1);
+    opacity: 1;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card .icon {
+    font-size: 2.5rem;
+    color: #bb86fc; /* Light purple for icons */
+    margin-bottom: 20px;
+    transition: transform 0.3s ease-in-out, color 0.3s;
+}
+
+.card-title {
+    position: relative;
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.card-title::before {
+    content: "";
+    height: 1rem;
+    width: 1rem;
+    border-radius: 50%;
+    box-shadow: inset 0 0 3px #bb86fc;
+    background-color: transparent;
+    position: absolute;
+    right: 0;
+}
+
+.card .date {
+    color: #bb86fc;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.card .description {
+    font-size: 0.9rem;
+    color: #000;
+}
+
+/* Card Hover Effects */
+.cards a.card:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.cards a.card:hover .icon {
+    transform: translateY(-5px);
+}
+
+.cards:hover > a.card:not(:hover) {
+    opacity: 0.5;
+}
+
+/* Dark Mode Styles for Cards Section */
+body.dark-mode .cards-section {
+    background-color: #1f1f1f; /* Dark background */
+    
+}
+
+body.dark-mode .cards-section h2 {
+    color: #ffffff; /* White text in dark mode */
+}
+
+body.dark-mode .cards-description {
+    color: #b0b0b0; /* Light gray text in dark mode */
+}
+
+body.dark-mode .card {
+    background-color: #2d2d2d; /* Dark card background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .card .icon {
+    color: #bb86fc; /* Light purple for icons in dark mode */
+}
+.card .icon img{
+    width: 45px;
+}
+
+body.dark-mode .card-title {
+    color: #ffffff; /* White text in dark mode */
+    font-size: 26px;
+}
+
+body.dark-mode .card .date {
+    color: #bb86fc; /* Light purple for date in dark mode */
+    
+}
+
+body.dark-mode .card .description {
+    color: #b0b0b0; /* Light gray text in dark mode */
+    
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .cards-section h2 {
+        font-size: 2rem; /* Smaller heading for mobile */
+    }
+
+    .cards-description {
+        font-size: 1rem; /* Smaller description for mobile */
+    }
+
+    .cards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust card width for smaller screens */
+        gap: 1rem; /* Reduce gap between cards */
+    }
+
+    .card {
+        padding: 1rem; /* Reduce padding for smaller screens */
+    }
+
+    .card .icon {
+        font-size: 2rem; /* Smaller icons for mobile */
+    }
+
+    .card-title {
+        font-size: 1.25rem; /* Smaller title for mobile */
+    }
+
+    .card .date {
+        font-size: 0.75rem; /* Smaller date for mobile */
+    }
+
+    .card .description {
+        font-size: 0.8rem; /* Smaller description for mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .cards {
+        grid-template-columns: 1fr; /* Single column layout for very small screens */
+    }
+}
