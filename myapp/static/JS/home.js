@@ -15,11 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const graphInputs = document.getElementById("graph-inputs");
     const graphForm = document.getElementById("graph-form");
     const graphContainer = document.getElementById("graph-container");
-    const hiddenFileInput = document.getElementById("hidden-file-input"); // Hidden file input
+    const hiddenFileInput = document.getElementById("hidden-file-input");
 
-    let uploadedFile = null; // Global variable to store the uploaded file
-    let csvData = []; // Store the parsed CSV data
-    let columns = []; // Store the column names from the CSV file
+    let uploadedFile = null;
+    let csvData = [];
+    let columns = [];
 
     // Initially hide the navbar
     nav.classList.add('hidden');
@@ -109,10 +109,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to handle file upload
     function handleFile(file) {
-        uploadedFile = file; // Store the uploaded file
+        uploadedFile = file;
         fileNameSpan.textContent = file.name;
 
-        // Add class based on file type
         if (file.name.toLowerCase().endsWith('.csv')) {
             dropZone.classList.remove("file-not-csv");
             dropZone.classList.add("file-uploaded");
@@ -123,50 +122,37 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Set the file in the hidden file input
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         hiddenFileInput.files = dataTransfer.files;
 
-        // Read the file and extract column names
         const reader = new FileReader();
         reader.onload = function (e) {
             const text = e.target.result;
-
-            // Parse the CSV to extract column names and data
             const { columns: extractedColumns, data } = parseCSV(text);
-
-            // Store the column names and data
             columns = extractedColumns;
             csvData = data;
 
-            console.log("Columns:", columns); // Debugging
-
-            // Populate the column select dropdown
             populateColumnSelect(columns);
-
-            // Populate the graph input dropdowns
             populateDropdowns();
         };
         reader.readAsText(file);
 
-        // Upload the file and fetch stats
         uploadFile(file);
     }
 
     // Function to parse CSV and extract column names and data
     function parseCSV(csvText) {
         const lines = csvText.split('\n');
-        const columns = lines[0].split(','); // First line contains column names
+        const columns = lines[0].split(',');
         const data = [];
 
-        // Parse the remaining lines as data
         for (let i = 1; i < lines.length; i++) {
             const values = lines[i].split(',');
             if (values.length === columns.length) {
                 const row = {};
                 columns.forEach((col, index) => {
-                    row[col] = values[index]; // Store values as strings (for now)
+                    row[col] = values[index];
                 });
                 data.push(row);
             }
@@ -177,10 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to populate the <select> element with columns
     function populateColumnSelect(columns) {
-        // Clear existing options
         columnSelect.innerHTML = '<option value="" disabled selected>Select a column</option>';
-
-        // Add new options
         columns.forEach(column => {
             const option = document.createElement("option");
             option.value = column;
@@ -191,9 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to populate dropdowns with column names
     function populateDropdowns() {
-        console.log("Populating dropdowns"); // Debugging
-        graphInputs.innerHTML = ''; // Clear previous inputs
-
+        graphInputs.innerHTML = '';
         const selectedGraph = graphType.value;
 
         if (selectedGraph === 'scatter') {
@@ -297,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </select>
                     </div>
                     <div>
-                        <label for='names'>Select Names:</label> < br>
+                        <label for='names'>Select Names:</label> <br>
                         <select name='names' id='names' required>
                             <option value="" disabled selected>Select Names</option>
                             ${columns.map(col => `<option value="${col}">${col}</option>`).join('')}
@@ -463,7 +444,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener for graph type change
     graphType.addEventListener("change", function () {
-        console.log("Graph type changed"); // Debugging
         populateDropdowns();
     });
 
@@ -471,44 +451,57 @@ document.addEventListener("DOMContentLoaded", function () {
     columnSelect.addEventListener("change", function () {
         const selectedColumn = this.value;
 
-        // Get the data for the selected column
-        const columnData = csvData.map(row => row[selectedColumn]);
-
-        // Check if the column is numerical
-        const isNumerical = columnData.every(val => !isNaN(parseFloat(val)));
-
-        if (!isNumerical) {
-            // Show the message and shake the select element
-            columnMessage.classList.remove("message-hidden");
-            columnMessage.classList.add("message-visible");
-            columnSelect.classList.add("shake");
-
-            // Remove the shake animation after it completes
-            setTimeout(() => {
-                columnSelect.classList.remove("shake");
-            }, 500);
-
-            // Clear the stat cards
-            clearStatCards();
-        } else {
-            // Hide the message
-            columnMessage.classList.remove("message-visible");
-            columnMessage.classList.add("message-hidden");
-
-            // Convert the column data to numbers
-            const numericalData = columnData.map(val => parseFloat(val));
-
-            // Calculate statistics
-            const mean = calculateMean(numericalData);
-            const median = calculateMedian(numericalData);
-            const std = calculateStandardDeviation(numericalData);
-            const min = Math.min(...numericalData);
-            const max = Math.max(...numericalData);
-            const variance = calculateVariance(numericalData);
-
-            // Update stat cards
-            updateStatCards(mean, median, std, min, max, variance);
-        }
+        // Create a FormData object to send the file and selected column
+        const formData = new FormData();
+        formData.append("file", uploadedFile); // Use the global uploadedFile variable
+        formData.append("column", selectedColumn);
+    
+        // Send the AJAX request to the backend
+        fetch("/calculate-statistics/", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"), // Include CSRF token
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                // Hide the error message
+                columnMessage.classList.remove("message-visible");
+                columnMessage.classList.add("message-hidden");
+    
+                // Update the stats cards with the received data
+                updateStatCards(
+                    data.stats.mean,
+                    data.stats.median,
+                    data.stats.std,
+                    data.stats.min,
+                    data.stats.max,
+                    data.stats.variance
+                );
+            } else {
+                // Show the error message and shake the select element
+                columnMessage.classList.remove("message-hidden");
+                columnMessage.classList.add("message-visible");
+                columnSelect.classList.add("shake");
+    
+                // Remove the shake animation after it completes
+                setTimeout(() => {
+                    columnSelect.classList.remove("shake");
+                }, 500);
+    
+                // Clear the stat cards
+                clearStatCards();
+    
+                // Log the error for debugging
+                console.error("Error:", data.error);
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("An error occurred while calculating statistics.");
+        });
     });
 
     // Function to clear stat cards
@@ -531,40 +524,10 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("var-card").querySelector(".stat-value").textContent = variance.toFixed(2);
     }
 
-    // Function to calculate mean
-    function calculateMean(data) {
-        const sum = data.reduce((acc, val) => acc + val, 0);
-        return sum / data.length;
-    }
-
-    // Function to calculate median
-    function calculateMedian(data) {
-        const sorted = data.slice().sort((a, b) => a - b);
-        const mid = Math.floor(sorted.length / 2);
-        return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-    }
-
-    // Function to calculate standard deviation
-    function calculateStandardDeviation(data) {
-        const mean = calculateMean(data);
-        const squaredDiffs = data.map(val => Math.pow(val - mean, 2));
-        const variance = calculateMean(squaredDiffs);
-        return Math.sqrt(variance);
-    }
-
-    // Function to calculate variance
-    function calculateVariance(data) {
-        const mean = calculateMean(data);
-        const squaredDiffs = data.map(val => Math.pow(val - mean, 2));
-        return calculateMean(squaredDiffs);
-    }
-
     // Function to upload file and fetch stats
     function uploadFile(file) {
         const formData = new FormData();
         formData.append("file", file);
-
-        console.log("Uploading file:", file.name); // Debugging line
 
         fetch("/upload/", {
             method: "POST",
@@ -580,7 +543,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.json();
             })
             .then((data) => {
-                console.log("Server response:", data); // Debugging line
                 if (data.error) {
                     alert(data.error);
                 } else {
@@ -596,7 +558,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function displayStats(data) {
         const statsContainer = document.getElementById("stats-container");
 
-        // Create the stats HTML
         const statsHTML = `
             <h3>File Information</h3>
             <p><strong>File Name:</strong> ${data.file_info.file_name}</p>
@@ -632,33 +593,28 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         `;
 
-        // Insert the stats HTML into the container
         statsContainer.innerHTML = statsHTML;
-
-        // Scroll to the stats section
         statsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
     graphForm.addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent the form from submitting and reloading the page
-    
-        // Create a FormData object from the form
+        e.preventDefault();
+
         const formData = new FormData(graphForm);
-    
-        // Send the form data to the server using AJAX
+
         fetch("/generate-graph/", {
             method: "POST",
             body: formData,
             headers: {
-                "X-CSRFToken": getCookie("csrftoken"), // Include CSRF token for security
+                "X-CSRFToken": getCookie("csrftoken"),
             },
         })
             .then((response) => response.json())
             .then((data) => {
                 if (data.error) {
-                    alert(data.error); // Show error message if any
+                    alert(data.error);
                 } else {
-                    // Render the graph in the graph container
-                    renderGraph(data.graph_json); // Pass the JSON data to renderGraph
+                    renderGraph(data.graph_json);
                 }
             })
             .catch((error) => {
@@ -666,20 +622,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("An error occurred while generating the graph.");
             });
     });
-    
+
     function renderGraph(graphJson) {
         const graphContainer = document.getElementById("graph-container");
         if (graphContainer) {
-            // Parse the graph JSON
             const graphData = JSON.parse(graphJson);
-    
-            // Initialize the Plotly graph
             Plotly.newPlot(graphContainer, graphData.data, graphData.layout);
         } else {
             console.error("Graph container not found.");
         }
     }
-    
+
     // Function to get CSRF token from cookies
     function getCookie(name) {
         let cookieValue = null;

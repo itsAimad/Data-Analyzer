@@ -8,7 +8,7 @@ from .db_utils import get_db_connection
 import mysql
 import logging
 import plotly.express as px
-import io
+
 
 def plotly_graphs():
     return [
@@ -28,7 +28,6 @@ def home(request):
     return render(request,'home.html',{
         "plotly_options" : plotly_options,
         })
-
 @csrf_exempt
 def generate_graph(request):
     if request.method == "POST":
@@ -40,48 +39,135 @@ def generate_graph(request):
                 return JsonResponse({"error": "No file uploaded."}, status=400)
 
             # Read the CSV file into a pandas DataFrame
-            df = pd.read_csv(uploaded_file)
+            try:
+                df = pd.read_csv(uploaded_file)
+            except pd.errors.EmptyDataError:
+                return JsonResponse({"error": "The file is empty."}, status=400)
+            except pd.errors.ParserError:
+                return JsonResponse({"error": "The file could not be parsed as a CSV."}, status=400)
 
             # Clean column names: remove leading/trailing whitespace and convert to lowercase
             df.columns = df.columns.str.strip().str.lower()
 
             # Get the selected graph type and columns from the form
             graph_type = request.POST.get("graphs")
-            x_axis = request.POST.get("x").strip().lower()
-            y_axis = request.POST.get("y").strip().lower()
+            x_axis = request.POST.get("x", "").strip().lower()
+            y_axis = request.POST.get("y", "").strip().lower()
             color_input = request.POST.get("color", "").strip().lower()
+            hover_name_input = request.POST.get('hover_name', "").strip().lower()
+            line_group_input = request.POST.get('line_group', "").strip().lower()
+            pattern_shape_input = request.POST.get('pattern_shape', "").strip().lower()
+            values_input = request.POST.get('values', "").strip().lower()
+            names_input = request.POST.get('names', "").strip().lower()
+
+            # Validate required columns
+            if graph_type not in ["pie", "ecdf"]:  # Graphs that don't require x and y axes
+                if not x_axis or x_axis not in df.columns:
+                    return JsonResponse({"error": f"Column '{x_axis}' does not exist in the file."}, status=400)
+                if not y_axis or y_axis not in df.columns:
+                    return JsonResponse({"error": f"Column '{y_axis}' does not exist in the file."}, status=400)
 
             # Generate the graph using Plotly Express
             if graph_type == "scatter":
-                fig = px.scatter(df, x=x_axis, y=y_axis, color=color_input if color_input else None)
+                fig = px.scatter(
+                    df,
+                    x=x_axis,
+                    y=y_axis,
+                    title=f"Scatter Plot of {x_axis} vs {y_axis}",
+                    labels={x_axis: x_axis.capitalize(), y_axis: y_axis.capitalize()},
+                    color=color_input if color_input else None,
+                )
             elif graph_type == "line":
-                fig = px.line(df, x=x_axis, y=y_axis, color=color_input if color_input else None)
+                fig = px.line(
+                    df,
+                    x=x_axis,
+                    y=y_axis,
+                    title=f"Line Plot of {x_axis} vs {y_axis}",
+                    labels={x_axis: x_axis.capitalize(), y_axis: y_axis.capitalize()},
+                    line_shape='spline',
+                    color=color_input if color_input else None,
+                    hover_name=hover_name_input if hover_name_input else None,
+                    line_group=line_group_input if line_group_input else None,
+                    render_mode="svg",
+                )
             elif graph_type == "bar":
-                fig = px.bar(df, x=x_axis, y=y_axis, color=color_input if color_input else None)
+                fig = px.bar(
+                    df,
+                    x=x_axis,
+                    y=y_axis,
+                    title=f"Bar Plot of {x_axis} vs {y_axis}",
+                    color=color_input if color_input else None,
+                    pattern_shape=pattern_shape_input if pattern_shape_input else None,
+                )
             elif graph_type == "pie":
-                fig = px.pie(df, names=x_axis, values=y_axis)
+                if not values_input or values_input not in df.columns:
+                    return JsonResponse({"error": f"Column '{values_input}' does not exist in the file."}, status=400)
+                if not names_input or names_input not in df.columns:
+                    return JsonResponse({"error": f"Column '{names_input}' does not exist in the file."}, status=400)
+                fig = px.pie(
+                    df,
+                    values=values_input,
+                    names=names_input,
+                    title=f"Pie Chart of {values_input}",
+                )
             elif graph_type == "histogram":
-                fig = px.histogram(df, x=x_axis, y=y_axis, color=color_input if color_input else None)
+                fig = px.histogram(
+                    df,
+                    x=x_axis,
+                    y=y_axis,
+                    color=color_input if color_input else None,
+                    hover_data=df.columns,
+                    marginal='rug',
+                )
             elif graph_type == "box":
-                fig = px.box(df, x=x_axis, y=y_axis, color=color_input if color_input else None)
+                fig = px.box(
+                    df,
+                    x=x_axis,
+                    y=y_axis,
+                    color=color_input if color_input else None,
+                    notched=True,
+                )
             elif graph_type == "violin":
-                fig = px.violin(df, x=x_axis, y=y_axis, color=color_input if color_input else None)
+                fig = px.violin(
+                    df,
+                    x=x_axis,
+                    y=y_axis,
+                    color=color_input if color_input else None,
+                )
             elif graph_type == "density_heatmap":
-                fig = px.density_heatmap(df, x=x_axis, y=y_axis)
+                fig = px.density_heatmap(
+                    df,
+                    x=x_axis,
+                    y=y_axis,
+                )
             elif graph_type == "scatter3d":
                 z_axis = request.POST.get("z", "").strip().lower()
-                if z_axis not in df.columns:
+                if not z_axis or z_axis not in df.columns:
                     return JsonResponse({"error": f"Column '{z_axis}' does not exist in the file."}, status=400)
-                fig = px.scatter_3d(df, x=x_axis, y=y_axis, z=z_axis, color=color_input if color_input else None)
+                fig = px.scatter_3d(
+                    df,
+                    x=x_axis,
+                    y=y_axis,
+                    z=z_axis,
+                    color=color_input if color_input else None,
+                )
             elif graph_type == "scatter_matrix":
                 dimensions = request.POST.getlist("dimensions")
                 dimensions = [dim.strip().lower() for dim in dimensions]
                 invalid_dimensions = [dim for dim in dimensions if dim not in df.columns]
                 if invalid_dimensions:
                     return JsonResponse({"error": f"Columns {invalid_dimensions} do not exist in the file."}, status=400)
-                fig = px.scatter_matrix(df, dimensions=dimensions, color=color_input if color_input else None)
+                fig = px.scatter_matrix(
+                    df,
+                    dimensions=dimensions,
+                    color=color_input if color_input else None,
+                )
             elif graph_type == "ecdf":
-                fig = px.ecdf(df, x=x_axis, color=color_input if color_input else None)
+                fig = px.ecdf(
+                    df,
+                    x=x_axis,
+                    color=color_input if color_input else None,
+                )
             else:
                 logger.error(f"Invalid graph type selected: {graph_type}")
                 return JsonResponse({"error": "Invalid graph type selected."}, status=400)
@@ -155,6 +241,54 @@ def upload_file(request):
     return JsonResponse({"error": "No file uploaded"}, status=400)
 
 
+@csrf_exempt
+def calculate_statistics(request):
+    if request.method == "POST" and request.FILES.get("file"):
+        uploaded_file = request.FILES["file"]
+        column = request.POST.get("column")  # Get the selected column
+
+        try:
+            # Read the CSV file using pandas
+            df = pd.read_csv(uploaded_file)
+
+            # Clean column names: remove leading/trailing whitespace and convert to lowercase
+            df.columns = df.columns.str.strip().str.lower()
+            column = column.strip().lower()  # Clean the selected column name
+
+            # Check if the column exists
+            if column not in df.columns:
+                return JsonResponse({"success": False, "error": f"Column '{column}' does not exist in the file."})
+
+            # Convert the column to numeric, coercing errors (non-numeric values become NaN)
+            numeric_column = pd.to_numeric(df[column], errors='coerce')
+
+            # Drop NaN values (skip empty or invalid values)
+            numeric_column = numeric_column.dropna()
+
+            # Check if there are any numeric values left after dropping NaN
+            if numeric_column.empty:
+                return JsonResponse({"success": False, "error": f"Column '{column}' contains no valid numeric data."})
+
+            # Calculate statistics (Pandas functions automatically skip NaN values)
+            stats = {
+                "mean": float(numeric_column.mean()),  # Convert to float
+                "median": float(numeric_column.median()),  # Convert to float
+                "std": float(numeric_column.std()),  # Convert to float
+                "min": float(numeric_column.min()),  # Convert to float
+                "max": float(numeric_column.max()),  # Convert to float
+                "variance": float(numeric_column.var()),  # Convert to float
+            }
+
+            # Debug: Print the calculated statistics
+            print(f"Stats for column '{column}':", stats)
+
+            return JsonResponse({"success": True, "stats": stats})
+        except Exception as e:
+            # Log the error for debugging
+            print(f"Error calculating statistics: {str(e)}")
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({"success": False, "error": "Invalid request method or missing file."})
+
 def signin(request):
     if request.method == 'POST':
         
@@ -224,3 +358,4 @@ def signup(request):
             cursor.close()
             connection.close()
     return render(request,"signup.html")
+

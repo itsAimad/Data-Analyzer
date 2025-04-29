@@ -803,7 +803,7 @@ section:not(#greeting-section):hover {
 
 #DrawGraph{
     text-align: center;
-    width: 40rem;
+    width: 60rem;
 }
 .dark-mode #DrawGraph{
     background-color: #1B2735;
